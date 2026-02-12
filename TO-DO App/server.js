@@ -3,6 +3,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const connectDB = require('./config/database');
 
@@ -18,6 +19,10 @@ connectDB();
 // Set view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// Use express-ejs-layouts
+app.use(expressLayouts);
+app.set('layout', 'layout');
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));

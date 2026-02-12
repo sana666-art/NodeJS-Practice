@@ -3,12 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title || 'To-Do App' %></title>
+  <% if (typeof title !== 'undefined' && title) { %>
+  <title><%= title %></title>
+  <% } else { %>
+  <title>To-Do App</title>
+  <% } %>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
   <link rel="stylesheet" href="/css/styles.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="<%= darkMode ? 'dark-mode' : '' %>">
+<body class="<%= (typeof darkMode !== 'undefined' && darkMode) ? 'dark-mode' : '' %>">
   <header>
     <nav class="navbar">
       <div class="nav-container">

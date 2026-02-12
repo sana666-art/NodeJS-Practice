@@ -36,6 +36,15 @@ router.get('/', async (req, res) => {
     const completedTasks = tasks.filter(task => task.completed).length;
     const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
+    // Check for due tasks (due today or overdue)
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dueTasks = tasks.filter(task => {
+      if (!task.dueDate || task.completed) return false;
+      const taskDueDate = new Date(task.dueDate.getFullYear(), task.dueDate.getMonth(), task.dueDate.getDate());
+      return taskDueDate <= today;
+    });
+
     res.render('tasks/index', {
       title: 'My Tasks',
       tasks,
@@ -44,6 +53,7 @@ router.get('/', async (req, res) => {
       priority: priority || 'all',
       completed: completed || 'all',
       progress,
+      dueTasksCount: dueTasks.length,
       user: { username: req.session.username }
     });
   } catch (error) {

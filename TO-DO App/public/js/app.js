@@ -205,12 +205,53 @@ function initDropdowns() {
   });
 }
 
+// Notification System
+function initNotifications() {
+  // Request notification permission
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+
+  // Check for due tasks and show notifications
+  checkDueTasks();
+}
+
+async function checkDueTasks() {
+  try {
+    const response = await fetch('/tasks?completed=false');
+    const html = await response.text();
+
+    // Parse the HTML to find due tasks (this is a simple approach)
+    // In a real app, you'd have a dedicated API endpoint
+    const dueTasksMatch = html.match(/dueTasksCount[^>]*>(\d+)/);
+    const dueTasksCount = dueTasksMatch ? parseInt(dueTasksMatch[1]) : 0;
+
+    if (dueTasksCount > 0 && Notification.permission === 'granted') {
+      new Notification('Task Reminder', {
+        body: `You have ${dueTasksCount} task${dueTasksCount > 1 ? 's' : ''} due today or overdue!`,
+        icon: '/favicon.ico',
+        tag: 'due-tasks'
+      });
+    }
+  } catch (error) {
+    console.error('Error checking due tasks:', error);
+  }
+}
+
+// Reminder function that can be called periodically
+function scheduleReminders() {
+  // Check every hour for due tasks
+  setInterval(checkDueTasks, 60 * 60 * 1000); // 1 hour
+}
+
 // Initialize all functionality when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   initDarkMode();
   initDragAndDrop();
   initFormValidation();
   initDropdowns();
+  initNotifications();
+  scheduleReminders();
 });
 
 // Utility functions

@@ -1,0 +1,61 @@
+<div class="form-container">
+  <div class="form-card">
+    <h1>Add New Task</h1>
+
+    <% if (errors && errors.length > 0) { %>
+      <div class="alert alert-error">
+        <ul>
+          <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="/tasks" method="POST" class="task-form">
+      <div class="form-group">
+        <label for="title">Task Title *</label>
+        <input type="text" id="title" name="title" value="<%= task.title || '' %>" required maxlength="100">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" maxlength="500"><%= task.description || '' %></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Category *</label>
+          <select id="category" name="category" required>
+            <option value="Work" <%= (task.category === 'Work') ? 'selected' : '' %>>Work</option>
+            <option value="Personal" <%= (task.category === 'Personal') ? 'selected' : '' %>>Personal</option>
+            <option value="Shopping" <%= (task.category === 'Shopping') ? 'selected' : '' %>>Shopping</option>
+            <option value="Health" <%= (task.category === 'Health') ? 'selected' : '' %>>Health</option>
+            <option value="Education" <%= (task.category === 'Education') ? 'selected' : '' %>>Education</option>
+            <option value="Other" <%= (task.category === 'Other' || !task.category) ? 'selected' : '' %>>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="priority">Priority</label>
+          <select id="priority" name="priority">
+            <option value="Low" <%= (task.priority === 'Low') ? 'selected' : '' %>>Low</option>
+            <option value="Medium" <%= (task.priority === 'Medium' || !task.priority) ? 'selected' : '' %>>Medium</option>
+            <option value="High" <%= (task.priority === 'High') ? 'selected' : '' %>>High</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate" name="dueDate"
+               value="<%= task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '' %>">
+      </div>
+
+      <div class="form-actions">
+        <a href="/tasks" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Add Task</button>
+      </div>
+    </form>
+  </div>
+</div>
